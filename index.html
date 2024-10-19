@@ -42,7 +42,7 @@
             .then(data => {
                 dictionary = data;
             })
-            .catch(error => console.error("辞書の読み込みエラー:", error));
+            .catch(error => alert("辞書の読み込みエラー: " + error));
 
         // キリル文字セット（Эを除く）
         const vowels = ['А', 'Е', 'И', 'О', 'У', 'Ы', 'Ю', 'Я']; // 母音
@@ -50,7 +50,7 @@
 
         // キリル文字を使ったAI単語生成
         function generateAIWord(word) {
-            const randomLength = Math.floor(Math.random() * 8) + 4; // 生成される単語の長さ（3〜5文字）
+            const randomLength = Math.floor(Math.random() * 3) + 3; // 生成される単語の長さ（3〜5文字）
             let aiGeneratedWord = '';
 
             for (let i = 0; i < randomLength; i++) {
@@ -67,10 +67,10 @@
         // 文法生成関数（不規則活用なし）
         function generateGrammar(word) {
             return {
-                "present": word + "ё", // 現在形
-                "past": word + "ар", // 過去形
-                "imperative": word + "уаа", // 命令形
-                "future": word + "лу'аа" // 未来形
+                "present": word + "ер", // 現在形（ローマ字転換）
+                "past": word + "лва", // 過去形（ローマ字転換）
+                "imperative": word + "ар", // 命令形（ローマ字転換）
+                "future": word + "цваа", // 未来形（ローマ字転換）
             };
         }
 
@@ -78,7 +78,7 @@
         function searchWord() {
             const searchTerm = document.getElementById('search').value.trim();
             if (!searchTerm) {
-                document.getElementById('result').innerHTML = "<p>検索ワードを入力してください。</p>";
+                alert("検索ワードを入力してください。");
                 return;
             }
 
@@ -94,19 +94,19 @@
             let table = `
                 <table>
                     <tr>
-                        <th>形態</th><th>形</th>
+                        <th>意味</th><th>形態</th><th>形</th>
                     </tr>
                     <tr>
-                        <td>現在形</td><td>${result.present}</td>
+                        <td>${result.meaning || '不明'}</td><td>現在形</td><td>${result.present}</td>
                     </tr>
                     <tr>
-                        <td>過去形</td><td>${result.past}</td>
+                        <td>${result.meaning || '不明'}</td><td>過去形</td><td>${result.past}</td>
                     </tr>
                     <tr>
-                        <td>命令形</td><td>${result.imperative}</td>
+                        <td>${result.meaning || '不明'}</td><td>命令形</td><td>${result.imperative}</td>
                     </tr>
                     <tr>
-                        <td>未来形</td><td>${result.future}</td>
+                        <td>${result.meaning || '不明'}</td><td>未来形</td><td>${result.future}</td>
                     </tr>
                 </table>
             `;
