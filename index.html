@@ -50,7 +50,7 @@
 
         // キリル文字を使ったAI単語生成
         function generateAIWord(word) {
-            const randomLength = Math.floor(Math.random() * 3) + 3; // 生成される単語の長さ（3〜5文字）
+            const randomLength = Math.floor(Math.random() * 8) + 4; // 生成される単語の長さ（3〜5文字）
             let aiGeneratedWord = '';
 
             for (let i = 0; i < randomLength; i++) {
@@ -67,10 +67,10 @@
         // 文法生成関数（不規則活用なし）
         function generateGrammar(word) {
             return {
-                "present": word + "лис", // 現在形
-                "past": word + "лов", // 過去形
-                "imperative": word + "л", // 命令形
-                "future": word + "лор" // 未来形
+                "present": word + "ё", // 現在形
+                "past": word + "ар", // 過去形
+                "imperative": word + "уаа", // 命令形
+                "future": word + "лу'аа" // 未来形
             };
         }
 
