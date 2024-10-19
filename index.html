@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>架空言語辞書</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #000;
+            padding: 8px;
+            text-align: left;
+        }
+        #result {
+            margin-top: 20px;
+        }
+        #search {
+            padding: 5px;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>架空言語辞書</h1>
+    <input type="text" id="search" placeholder="単語を検索" />
+    <button onclick="searchWord()">検索</button>
+
+    <div id="result"></div>
+
+    <script>
+        let dictionary = {};  // 辞書データ
+
+        // JSONファイルを読み込む
+        fetch('dictionary.json')
+            .then(response => response.json())
+            .then(data => {
+                dictionary = data;
+            })
+            .catch(error => console.error("辞書の読み込みエラー:", error));
+
+        // キリル文字セット（Эを除く）
+        const vowels = ['А', 'Е', 'И', 'О', 'У', 'Ы', 'Ю', 'Я']; // 母音
+        const consonants = ['Б', 'В', 'Г', 'Д', 'Ж', 'З', 'Й', 'К', 'Л', 'М', 'Н', 'П', 'Р', 'С', 'Т', 'Ф', 'Х', 'Ц', 'Ч', 'Ш', 'Щ']; // 子音
+
+        // キリル文字を使ったAI単語生成
+        function generateAIWord(word) {
+            const randomLength = Math.floor(Math.random() * 3) + 3; // 生成される単語の長さ（3〜5文字）
+            let aiGeneratedWord = '';
+
+            for (let i = 0; i < randomLength; i++) {
+                if (i % 2 === 0) {
+                    aiGeneratedWord += consonants[Math.floor(Math.random() * consonants.length)]; // 偶数インデックスで子音
+                } else {
+                    aiGeneratedWord += vowels[Math.floor(Math.random() * vowels.length)]; // 奇数インデックスで母音
+                }
+            }
+
+            return generateGrammar(aiGeneratedWord); // 文法を適用した単語を返す
+        }
+
+        // 文法生成関数（不規則活用なし）
+        function generateGrammar(word) {
+            return {
+                "present": word + "лис", // 現在形
+                "past": word + "лов", // 過去形
+                "imperative": word + "л", // 命令形
+                "future": word + "лор" // 未来形
+            };
+        }
+
+        // 検索機能
+        function searchWord() {
+            const searchTerm = document.getElementById('search').value.trim();
+            if (!searchTerm) {
+                document.getElementById('result').innerHTML = "<p>検索ワードを入力してください。</p>";
+                return;
+            }
+
+            // 辞書内検索
+            let result = dictionary[searchTerm];
+
+            // 辞書に単語がない場合、AIによる生成を実行
+            if (!result) {
+                result = generateAIWord(searchTerm);
+            }
+
+            // 結果をテーブルで表示
+            let table = `
+                <table>
+                    <tr>
+                        <th>形態</th><th>形</th>
+                    </tr>
+                    <tr>
+                        <td>現在形</td><td>${result.present}</td>
+                    </tr>
+                    <tr>
+                        <td>過去形</td><td>${result.past}</td>
+                    </tr>
+                    <tr>
+                        <td>命令形</td><td>${result.imperative}</td>
+                    </tr>
+                    <tr>
+                        <td>未来形</td><td>${result.future}</td>
+                    </tr>
+                </table>
+            `;
+            document.getElementById('result').innerHTML = table;
+        }
+    </script>
+</body>
+</html>
